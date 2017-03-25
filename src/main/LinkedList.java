@@ -156,13 +156,11 @@ public class LinkedList<E> implements Collection<E> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-
         return false;
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-
         return false;
     }
 
@@ -170,4 +168,6 @@ public class LinkedList<E> implements Collection<E> {
     public void clear() {
 
     }
+
+
 }
