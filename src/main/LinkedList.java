@@ -3,6 +3,7 @@ package main;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 /**
  * LinkedList creates list of E elements.
@@ -12,11 +13,37 @@ import java.util.ListIterator;
 public class LinkedList<E> implements Collection<E> {
 
     private Node head;
+    private Node tail;
 
-    private class Node {
-        public E data;
-        public Node previous;
-        public Node next;
+    public LinkedList() {
+        head = tail = null;
+    }
+
+    public Node getHead() {
+        return head;
+    }
+
+    public void setHead(Node head) {
+        this.head = head;
+    }
+
+    public Node getTail() {
+        return tail;
+    }
+
+    public void setTail(Node tail) {
+        this.tail = tail;
+    }
+
+    public LinkedList(E e) {
+        head = new Node(e);
+        tail = head;
+    }
+
+    public class Node {
+        private E data;
+        private Node previous;
+        private Node next;
 
         /**
          * Constructs Node.
@@ -24,28 +51,67 @@ public class LinkedList<E> implements Collection<E> {
          */
         public Node(E e) {
             data = e;
+            next = previous = null;
+        }
+
+        public E getData() {
+            return data;
+        }
+
+        public void setData(E data) {
+            this.data = data;
+        }
+
+        public Node getPrevious() {
+            return previous;
+        }
+
+        public void setPrevious(Node previous) {
+            this.previous = previous;
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
         }
     }
 
     @Override
     public boolean add(E e) {
 
+        Node newNode = new Node(e);
+
         // Node is empty
         if (isEmpty()) {
-            head = new Node(e);
-            return true;
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.previous = tail;
+            tail = newNode;
         }
-
+        return true;
         // Node already has element
-
-
-        return false;
     }
 
     @Override
     public int size() {
+        Node temp;
+        int count;
+        if (head == null) {
+            return 0;
+        } else {
+            temp = head;
+            count = 1;
+            while(temp.next != null) {
+                temp = temp.next;
+                count++;
+            }
+            return count;
+        }
 
-        return 0;
     }
 
     @Override
@@ -62,14 +128,27 @@ public class LinkedList<E> implements Collection<E> {
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
+            private int index = 0;
+
             @Override
             public boolean hasNext() {
-                return false;
+                return index < size();
             }
 
             @Override
             public E next() {
-                return null;
+                if (!hasNext())
+                    throw new NoSuchElementException();
+                Node temp = head;
+
+                for (int i = 0; i < index; i++) {
+                    temp = temp.next;
+                }
+
+                index++;
+
+                return temp.getData();
+
             }
         };
     }
@@ -125,8 +204,15 @@ public class LinkedList<E> implements Collection<E> {
 
     @Override
     public Object[] toArray() {
+        Object[] array = new Object[size()];
+        Node temp = this.head;
 
-        return new Object[0];
+        if (!isEmpty())
+            for (int i = 0 ; i < size(); i++) {
+                array[i] = temp.getData();
+
+            }
+        return array;
     }
 
     @Override
@@ -150,12 +236,19 @@ public class LinkedList<E> implements Collection<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
+        if ( c.size() == 0)
+            return false;
+        for (E element : c) {
+            this.add(element);
+        }
 
-        return false;
+        return true;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
+
+
         return false;
     }
 
@@ -166,7 +259,7 @@ public class LinkedList<E> implements Collection<E> {
 
     @Override
     public void clear() {
-
+        head = tail = null;
     }
 
 
