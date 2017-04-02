@@ -78,9 +78,7 @@ class DLinkedList<T extends Comparable<T>> {
             DNode cur = head;
 
             public boolean isEmpty() {
-                if (cur != null)
-                    return false;
-                return true;
+                return cur == null;
             }
 
             public boolean hasNext() {

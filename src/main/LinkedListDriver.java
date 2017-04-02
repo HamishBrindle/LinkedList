@@ -17,8 +17,9 @@ public class LinkedListDriver {
 	 * @param testList a LinkedList
 	 */
 	public static void addToList(String[] data, LinkedList<String> testList) {
-		for (String d : data)
+		for (String d : data) {
 			testList.add(d);
+		}
 	}
 
 	/**
@@ -70,6 +71,7 @@ public class LinkedListDriver {
 		String[] values = { "hello", "test", "kale", "nomad", "apple", "fish" };
 		String[] test1 = { "test", "nomad", "fish" };
 		String[] test2 = { "house", "fish", "car", "garage", "apple" };
+
 		addToList(values, myLinkedList);
 		displayList(myLinkedList);
 		System.out.println("**********is kale in collection?" + myLinkedList.contains("kale"));
@@ -78,7 +80,9 @@ public class LinkedListDriver {
 		addToList(test1, l2);
 		System.out.println("**********display test1 values");
 		displayList(l2);
+
 		System.out.println("**********does the collection contain all values in test1? " + myLinkedList.containsAll(l2));
+
 		Object[] array = myLinkedList.toArray();
 		System.out.println("**********convert list to an array and display as an array");
 		displayArray(array);
@@ -101,22 +105,20 @@ public class LinkedListDriver {
 		l2.retainAll(myLinkedList);
 		displayList(l2);
 
-		/*
 		System.out.println("**********construct a new list3 with mouse");
 		LinkedList<String> l3 = new LinkedList<String>("mouse");
 		displayList(l3);
 		System.out.println("**********add test2 values to list3");
-		addToList(test2, l3);
+        addToList(test2, l3);
 		displayList(l3);
 		System.out.println("**********combine list2 with list3");
 		l3.addAll(l2);
 		displayList(l3);
 		System.out.println("**********l3 in reverse");
-		displayListReverse(l3);
+		//displayListReverse(l3);
 		System.out.println("**********retain all values in list3 that are found in common with list");
 		l3.retainAll(myLinkedList);
 		displayList(l3);
-		*/
 
 	}
 }
