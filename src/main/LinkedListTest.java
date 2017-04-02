@@ -35,7 +35,6 @@ public class LinkedListTest {
         Assert.assertNotNull(stringList.getHead());
         Assert.assertNotNull(stringList.getTail());
         Assert.assertTrue(stringList.getHead().getData().equals(stringList.getTail().getData()));
-
     }
 
     @Test
