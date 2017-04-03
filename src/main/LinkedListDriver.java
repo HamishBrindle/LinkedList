@@ -115,7 +115,7 @@ public class LinkedListDriver {
 		l3.addAll(l2);
 		displayList(l3);
 		System.out.println("**********l3 in reverse");
-		//displayListReverse(l3);
+		displayListReverse(l3);
 		System.out.println("**********retain all values in list3 that are found in common with list");
 		l3.retainAll(myLinkedList);
 		displayList(l3);

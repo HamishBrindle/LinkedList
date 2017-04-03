@@ -1,10 +1,13 @@
 package main;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.*;
 import java.util.stream.IntStream;
 
 /**
  * LinkedList creates list of E elements and provides controls for various alterations to the list.
+ *
  * @author Hamish
  * @date 2017-03-25
  */
@@ -22,23 +25,8 @@ public class LinkedList<E> implements Collection<E> {
     }
 
     /**
-     * Getter for head.
-     * @return  First element in the list.
-     */
-    Node getHead() {
-        return head;
-    }
-
-    /**
-     * Getter for tail.
-     * @return  Last Node in the list.
-     */
-    Node getTail() {
-        return tail;
-    }
-
-    /**
      * Constructor: Overloaded to accept initial data input.
+     *
      * @param e The data to be input as first element in list.
      */
     LinkedList(E e) {
@@ -47,44 +35,28 @@ public class LinkedList<E> implements Collection<E> {
     }
 
     /**
-     * Inner-class: Node. Node holds data and are the links in the LinkedList.
+     * Getter for head.
+     *
+     * @return First element in the list.
      */
-    public class Node {
-        private E data;
-        private Node previous;
-        private Node next;
+    Node getHead() {
+        return head;
+    }
 
-        /**
-         * Constructs Node.
-         * @param e Element
-         */
-        Node(E e) {
-            data = e;
-            next = previous = null;
-        }
-
-        /**
-         * Get the data from a Node.
-         * @return Data from the LinkedList elements.
-         */
-        E getData() {
-            return data;
-        }
-
-        /**
-         * Getter for a Node's next.
-         * @return  A Node's next link.
-         */
-        Node getNext() {
-            return next;
-        }
-
+    /**
+     * Getter for tail.
+     *
+     * @return Last Node in the list.
+     */
+    Node getTail() {
+        return tail;
     }
 
     /**
      * Add a new element to the list.
+     *
      * @param e Data to be added.
-     * @return  True if new element added to list, false if nothing has changed.
+     * @return True if new element added to list, false if nothing has changed.
      */
     @Override
     public boolean add(E e) {
@@ -106,7 +78,8 @@ public class LinkedList<E> implements Collection<E> {
 
     /**
      * Size of the linked list; how many elements are within the list.
-     * @return  Size of the list.
+     *
+     * @return Size of the list.
      */
     @Override
     public int size() {
@@ -117,7 +90,7 @@ public class LinkedList<E> implements Collection<E> {
         } else {
             temp = head;
             count = 1;
-            while(temp.next != null) {
+            while (temp.next != null) {
                 temp = temp.next;
                 count++;
             }
@@ -127,7 +100,8 @@ public class LinkedList<E> implements Collection<E> {
 
     /**
      * Indicates if there are no elements in the list.
-     * @return  True if list is empty, false if there exists some elements.
+     *
+     * @return True if list is empty, false if there exists some elements.
      */
     @Override
     public boolean isEmpty() {
@@ -136,15 +110,21 @@ public class LinkedList<E> implements Collection<E> {
 
     /**
      * Indicates if there is existence of Object o inside list.
+     *
      * @param o The element being searched for within the list.
-     * @return  True if element exists in list, false if not.
+     * @return True if element exists in list, false if not.
      */
     @Override
     public boolean contains(Object o) {
 
-        for (E e : this)
-            if (e.equals(o))
+        for (E e : this) {
+            if (e.equals(o)) {
+                if (e.getClass() != o.getClass()) {
+                    throw new ClassCastException();
+                }
                 return true;
+            }
+        }
 
         // confirm Object o is same as E; must be same type
         // throw ClassCastException
@@ -154,16 +134,18 @@ public class LinkedList<E> implements Collection<E> {
 
     /**
      * Iterates through the list by creating Iterator.
-     * @return  An anonymous Iterator object containing LinkedList data.
+     *
+     * @return An anonymous Iterator object containing LinkedList data.
      */
     @Override
     public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            private int index = 0;
+        return new ListIterator<E>() {
+
+            int index = 0;
 
             /**
              * Indicates if there is another element after current.
-             * @return  True if list has more element(s), false if it is at the end of the list.
+             * @return True if list has more element(s), false if it is at the end of the list.
              */
             @Override
             public boolean hasNext() {
@@ -172,63 +154,134 @@ public class LinkedList<E> implements Collection<E> {
 
             /**
              * Retrieves the next element in the list.
-             * @return  The next Object of type E in the list.
+             * @return The next Object of type E in the list.
              */
             @Override
             public E next() {
-                if (!hasNext())
+                if (!hasNext()) {
                     throw new NoSuchElementException();
+                }
                 Node temp = head;
+                for (int i = 0; i < index; i++) {
+                    temp = temp.next;
+                }
+
+                if (index <= size()) {
+                    index++;
+                }
+
+                return temp.getData();
+            }
+
+            /**
+             * Retrieves the previous element in the list.
+             * @return The previous Object of type E in the list.
+             */
+            @Override
+            public boolean hasPrevious() {
+                return index > 0;
+            }
+
+            /**
+             * Indicates if there is another element after current.
+             * @return True if list has more element(s), false if it is at the end of the list.
+             */
+            @Override
+            public E previous() {
+                if (!hasPrevious()) {
+                    throw new NoSuchElementException();
+                }
+                Node temp = head;
+
+                if (index > 0) {
+                    index--;
+                }
 
                 for (int i = 0; i < index; i++) {
                     temp = temp.next;
                 }
 
-                index++;
-
                 return temp.getData();
+            }
+
+            /**
+             * Get next index.
+             * @return Index for next element.
+             */
+            @Override
+            public int nextIndex() {
+                return index + 1;
+            }
+
+            /**
+             * Get previous index.
+             * @return Index for previous element.
+             */
+            @Override
+            public int previousIndex() {
+                return index - 1;
+            }
+
+            @Override
+            public void remove() {
+                throw new NotImplementedException();
+            }
+
+            @Override
+            public void set(E e) {
+                throw new NotImplementedException();
+            }
+
+            @Override
+            public void add(E e) {
+                throw new NotImplementedException();
             }
         };
     }
 
     /**
      * Prints list to an array of type Object.
-     * @return  An array of type Object containing the elements of the LinkedList.
+     *
+     * @return An array of type Object containing the elements of the LinkedList.
      */
     @Override
     public Object[] toArray() {
         Object[] array = new Object[size()];
         Node temp = head;
 
-        if (!isEmpty())
-            for (int i = 0 ; i < size(); i++) {
+        if (!isEmpty()) {
+            for (int i = 0; i < size(); i++) {
                 array[i] = temp.getData();
                 temp = temp.getNext();
             }
+        }
         return array;
     }
 
     /**
      * Returns an array of a specific type depending on the parameter input.
-     * @param a Array of type T.
-     * @param <T>   Data type of a.
-     * @return  Array of type T.
+     *
+     * @param a   Array of type T.
+     * @param <T> Data type of a.
+     * @return Array of type T.
      */
     @Override
     public <T> T[] toArray(T[] a) {
-        if (a.length < size())
-            // Make a new array of a's runtime type, but my contents:
+        if (a.length < size()) {
             return (T[]) Arrays.copyOf(toArray(), size(), a.getClass());
+        }
         System.arraycopy(toArray(), 0, a, 0, size());
-        if (a.length > size())
+        if (a.length > size()) {
             a[size()] = null;
+        }
         return a;
     }
 
     /**
      * Remove an Object from the LinkedList.
+     *
      * @param o Object to be removed from LinkedList.
-     * @return  True if removal was successful, false if LinkedList
+     * @return True if removal was successful, false if LinkedList
      * is empty or if the list did not contain Object o.
      */
     @Override
@@ -238,13 +291,15 @@ public class LinkedList<E> implements Collection<E> {
 
         if (!this.isEmpty() && this.contains(o)) {
             for (E e : this) {
-                if (e.equals(o))
+                if (e.equals(o)) {
                     continue;
+                }
                 lTemp.add(e);
             }
             clear();
-            for (E e : lTemp)
+            for (E e : lTemp) {
                 add(e);
+            }
             return true;
         }
         return false;
@@ -252,15 +307,17 @@ public class LinkedList<E> implements Collection<E> {
 
     /**
      * Indicates if LinkedList contains all of the elements of specific Collection.
+     *
      * @param c Collection list of elements.
-     * @return  True if LinkedList contains all contents of Collection c, false if one or more contents
+     * @return True if LinkedList contains all contents of Collection c, false if one or more contents
      * of Collection c are missing from LinkedList.
      */
     @Override
     public boolean containsAll(Collection<?> c) {
 
-        if (c.isEmpty())
+        if (c.isEmpty()) {
             return false;
+        }
 
         Iterator it = c.iterator();
 
@@ -270,27 +327,28 @@ public class LinkedList<E> implements Collection<E> {
 
     /**
      * Insert all elements of a Collection list into LinkedList.
+     *
      * @param c Collection list of elements to be inserted into LinkedList.
-     * @return  True if Collection c elements were added to LinkedList,
+     * @return True if Collection c elements were added to LinkedList,
      * false if c is empty and no changes were made.
      */
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        if ( c.size() == 0)
+        if (c.size() == 0) {
             return false;
+        }
         for (E e : c) {
             this.add(e);
         }
-
-        //ClassCastException
 
         return true;
     }
 
     /**
      * Remove all elements of Collection c from LinkedList.
+     *
      * @param c Collection of elements to be removed from LinkedList.
-     * @return  True if one or more elements from Collection c were removed from LinkedList.
+     * @return True if one or more elements from Collection c were removed from LinkedList.
      */
     @Override
     public boolean removeAll(Collection<?> c) {
@@ -328,8 +386,9 @@ public class LinkedList<E> implements Collection<E> {
 
     /**
      * Removes all elements from LinkedList that don't correspond with elements from Collection c.
+     *
      * @param c Collection of elements to be retained in LinkedList.
-     * @return  True if changes were made, false if no changes were made.
+     * @return True if changes were made, false if no changes were made.
      */
     @Override
     public boolean retainAll(Collection<?> c) {
@@ -353,8 +412,9 @@ public class LinkedList<E> implements Collection<E> {
             }
             // Copy temp list over to this
             clear();
-            for (E e : lTemp)
+            for (E e : lTemp) {
                 add(e);
+            }
         }
         return removed > 0;
     }
@@ -365,6 +425,52 @@ public class LinkedList<E> implements Collection<E> {
     @Override
     public void clear() {
         head = tail = null;
+    }
+
+    /**
+     * Inner-class: Node. Node holds data and are the links in the LinkedList.
+     */
+    public class Node {
+        private E data;
+        private Node previous;
+        private Node next;
+
+        /**
+         * Constructs Node.
+         *
+         * @param e Element
+         */
+        Node(E e) {
+            data = e;
+            next = previous = null;
+        }
+
+        /**
+         * Get the data from a Node.
+         *
+         * @return Data from the LinkedList elements.
+         */
+        E getData() {
+            return data;
+        }
+
+        /**
+         * Getter for a Node's next.
+         *
+         * @return A Node's next link.
+         */
+        Node getNext() {
+            return next;
+        }
+
+        /**
+         * Getter for a Node's previous.
+         *
+         * @return A Node's previous link.
+         */
+        Node getPrevious() {
+            return previous;
+        }
     }
 
 }

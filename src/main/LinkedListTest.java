@@ -13,11 +13,15 @@ import java.util.Random;
  */
 public class LinkedListTest {
 
-    private LinkedList<String> stringList ;
+    private LinkedList<String> stringList;
+    private LinkedList<Integer> integerList;
+    private LinkedList<Double> doubleList;
 
     @Before
     public void setUp() throws Exception {
         stringList = new LinkedList<>();
+        integerList = new LinkedList<>();
+        doubleList = new LinkedList<>();
     }
 
     @After
@@ -69,6 +73,16 @@ public class LinkedListTest {
         }
 
         Assert.assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testContainsCorrectClassIntegerDouble() {
+
+        Double test = new Double("12.0");
+        integerList.add(12);
+
+        Assert.assertFalse(integerList.contains(test));
+
     }
 
 }
