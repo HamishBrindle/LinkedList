@@ -71,8 +71,6 @@ public class LinkedList<E> implements Collection<E> {
             tail = newNode;
         }
 
-        // must throw ClassCastException, NullPointerException
-
         return true;
     }
 
@@ -125,9 +123,6 @@ public class LinkedList<E> implements Collection<E> {
                 return true;
             }
         }
-
-        // confirm Object o is same as E; must be same type
-        // throw ClassCastException
 
         return false;
     }
@@ -297,9 +292,7 @@ public class LinkedList<E> implements Collection<E> {
                 lTemp.add(e);
             }
             clear();
-            for (E e : lTemp) {
-                add(e);
-            }
+            this.addAll(lTemp);
             return true;
         }
         return false;
@@ -400,7 +393,6 @@ public class LinkedList<E> implements Collection<E> {
         Object[] aTemp = c.toArray();
 
         if (!this.isEmpty()) {
-            // Make temporary list without removed Object
             for (E e : this) {
                 for (Object anATemp : aTemp) {
                     if (!e.equals(anATemp)) {
@@ -410,11 +402,8 @@ public class LinkedList<E> implements Collection<E> {
                     lTemp.add(e);
                 }
             }
-            // Copy temp list over to this
             clear();
-            for (E e : lTemp) {
-                add(e);
-            }
+            this.addAll(lTemp);
         }
         return removed > 0;
     }
@@ -455,6 +444,15 @@ public class LinkedList<E> implements Collection<E> {
         }
 
         /**
+         * Set data for element.
+         *
+         * @param data Data held in Node.
+         */
+        void setData(E data) {
+            this.data = data;
+        }
+
+        /**
          * Getter for a Node's next.
          *
          * @return A Node's next link.
@@ -464,12 +462,31 @@ public class LinkedList<E> implements Collection<E> {
         }
 
         /**
+         * Set next element in LinkedList.
+         *
+         * @param next Next element in the LinkedList.
+         */
+        void setNext(Node next) {
+            this.next = next;
+        }
+
+        /**
          * Getter for a Node's previous.
          *
          * @return A Node's previous link.
          */
         Node getPrevious() {
+
             return previous;
+        }
+
+        /**
+         * Set previous element in the LinkedList.
+         *
+         * @param previous Previous element in the LinkedList.
+         */
+        void setPrevious(Node previous) {
+            this.previous = previous;
         }
     }
 
